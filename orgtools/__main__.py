@@ -4,10 +4,10 @@ from __future__ import absolute_import, unicode_literals
 import os
 
 import click
-from click import echo
+from click import echo, secho
 
 from orgtools.links import relfiles_in_file
-from orgtools.utils import ensure_path
+from orgtools.utils import ensure_path, IMAGE_EXTENSIONS
 
 
 click.disable_unicode_literals_warning = True
@@ -38,10 +38,36 @@ def relfiles(opts, src):
 
 @cli.command()
 @click.argument('basedir', type=DIR_PATH)
+@click.option('extensions', '--extension', '-e',
+              multiple=True, default=list(IMAGE_EXTENSIONS))
 @click.pass_obj
-def prune(opts, basedir):
+def prune(opts, basedir, extensions):
     encoding = opts['encoding']
     dry_run = opts['dry_run']
+
+    orgfiles, candidates = set(), set()
+    for root, dirnames, filenames in os.walk(basedir):
+        for filename in filenames:
+            filepath = os.path.join(root, filename)
+            if filepath.endswith(extensions):
+                candidates.add(filepath)
+            if filepath.endswith('.org'):
+                orgfiles.add(filepath)
+
+    relfiles = set()
+    for orgfile in orgfiles:
+        basedir, _ = os.path.split(orgfile)
+        for relfile in relfiles_in_file(orgfile, encoding):
+            filepath = os.path.join(basedir, relfile)
+            relfiles.add(filepath)
+
+    targets = candidates - relfiles
+    for target in targets:
+        if dry_run:
+            secho(target, fg='yellow')
+        else:
+            secho(target, fg='red')
+            os.remove(target)
 
 
 @cli.command()
