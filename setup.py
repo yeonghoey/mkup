@@ -19,4 +19,9 @@ setup(
     ],
     keywords='productivity',
     packages=find_packages(exclude=['tests']),
-    )
+    entry_points={
+        'console_scripts': [
+            'org=orgtools.__main__:cli',
+        ]
+    },
+)
