@@ -18,7 +18,8 @@ def relfiles(content, basedir='.'):
         link = link[5:] if link.startswith('file:') else link
         m = RELPATH.match(link)
         if m is not None:
+            rel = m.group(0)
             path = os.path.join(basedir, m.group(0))
             path = os.path.abspath(path)
             if os.path.exists(path):
-                yield path
+                yield rel

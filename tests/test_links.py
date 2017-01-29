@@ -46,12 +46,10 @@ def test_relfiles(monkeypatch):
         return not name.startswith('#')
 
     monkeypatch.setattr(os.path, 'exists', mock_exists)
-
-    A = os.path.abspath
     assert_samples(relfiles, [
         [],
-        [A('file.txt')],
-        [A('image.png')],
-        [A('image.png')],
-        [A('path/to/image.jpg'), A('path/to/image.jpeg')] 
+        ['file.txt'],
+        ['image.png'],
+        ['image.png'],
+        ['path/to/image.jpg', 'path/to/image.jpeg']
     ])
