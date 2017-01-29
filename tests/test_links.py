@@ -20,14 +20,21 @@ SAMPLES = [
 ]
 
 
+def assert_samples(f, expectations):
+    for s, e in zip(SAMPLES, expectations):
+        assert f(s) == e
+
+
 def test_extract():
-    expectations = [
+    assert_samples(extract, [
         [],
         ['file.txt'],
         ['image.png'],
         ['http://example.com', 'image.png'],
         ['path/to/image.jpg', 'file:path/to/image.jpeg', 'http://example.com',
          '/more/image.gif', 'file:/more/image.gif'],
-    ]
-    for s, e in zip(SAMPLES, expectations):
-        assert e == extract(s)
+    ])
+
+
+def test_imgrefs():
+    pass
