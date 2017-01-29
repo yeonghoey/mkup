@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from orgtools.imgrefs import extract
+from orgtools.links import extract, relfiles
 
 
 SAMPLES = [
@@ -22,7 +22,7 @@ SAMPLES = [
 
 def assert_samples(f, expectations):
     for s, e in zip(SAMPLES, expectations):
-        assert f(s) == e
+        assert list(f(s)) == e
 
 
 def test_extract():
@@ -36,5 +36,11 @@ def test_extract():
     ])
 
 
-def test_imgrefs():
-    pass
+def test_relfiles():
+    assert_samples(relfiles, [
+        [],
+        ['file.txt'],
+        ['image.png'],
+        ['image.png'],
+        ['path/to/image.jpg', 'path/to/image.jpeg'] 
+    ])
