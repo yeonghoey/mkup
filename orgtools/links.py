@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+import codecs
 import os
 import re
 
@@ -23,3 +24,10 @@ def relfiles(content, basedir='.'):
             path = os.path.abspath(path)
             if os.path.exists(path):
                 yield rel
+
+
+def relfiles_in_file(path, encoding='utf8'):
+    with codecs.open(path, 'r', encoding=encoding) as f:
+        content = f.read()
+    basedir, _ = os.path.split(path)
+    return relfiles(content, basedir)
