@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+import os
+
 from orgtools.links import extract, relfiles
 
 
@@ -16,6 +18,7 @@ SAMPLES = [
     ** Nested
     - [[/more/image.gif][gif?]]
     - [[file:/more/image.gif][gif?]]
+    - [[#internal]]
     ''',
 ]
 
@@ -32,15 +35,23 @@ def test_extract():
         ['image.png'],
         ['http://example.com', 'image.png'],
         ['path/to/image.jpg', 'file:path/to/image.jpeg', 'http://example.com',
-         '/more/image.gif', 'file:/more/image.gif'],
+         '/more/image.gif', 'file:/more/image.gif', '#internal'],
     ])
 
 
-def test_relfiles():
+def test_relfiles(monkeypatch):
+    def mock_exists(path):
+        """Distinguish internal links from files"""
+        _, name = os.path.split(path)
+        return not name.startswith('#')
+
+    monkeypatch.setattr(os.path, 'exists', mock_exists)
+
+    A = os.path.abspath
     assert_samples(relfiles, [
         [],
-        ['file.txt'],
-        ['image.png'],
-        ['image.png'],
-        ['path/to/image.jpg', 'path/to/image.jpeg'] 
+        [A('file.txt')],
+        [A('image.png')],
+        [A('image.png')],
+        [A('path/to/image.jpg'), A('path/to/image.jpeg')] 
     ])
