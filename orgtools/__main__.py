@@ -15,6 +15,8 @@ click.disable_unicode_literals_warning = True
 
 SRC_PATH = click.Path(exists=True, dir_okay=False, resolve_path=True)
 DST_PATH = click.Path(exists=False, dir_okay=True, resolve_path=False)
+DIR_PATH = click.Path(exists=True, file_okay=False, dir_okay=True,
+                      resolve_path=True)
 
 
 @click.group()
@@ -35,9 +37,9 @@ def relfiles(opts, src):
 
 
 @cli.command()
-@click.argument('src', type=SRC_PATH)
+@click.argument('basedir', type=DIR_PATH)
 @click.pass_obj
-def prune(opts, src):
+def prune(opts, basedir):
     encoding = opts['encoding']
     dry_run = opts['dry_run']
 
