@@ -18,33 +18,35 @@ DST_PATH = click.Path(exists=False, dir_okay=True, resolve_path=False)
 
 
 @click.group()
-def cli():
-    pass
+@click.option('--encoding', default='utf8')
+@click.option('--dry-run', is_flag=True, default=False)
+@click.pass_context
+def cli(ctx, encoding, dry_run):
+    ctx.obj = {'encoding': encoding, 'dry_run': dry_run}
 
 
 @cli.command()
 @click.argument('src', type=SRC_PATH)
-@click.option('--encoding', default='utf8')
-@click.option('--abspath', is_flag=True, default=False)
-def relfiles(src, abspath, encoding):
-    if abspath:
-        basedir, _ = os.path.split(src)
-
+@click.pass_obj
+def relfiles(opts, src):
+    encoding = opts['encoding']
     for rel in relfiles_in_file(src, encoding):
-        if abspath:
-            path = os.path.join(basedir, rel)
-            path = os.path.abspath(path)
-        else:
-            path = rel
-        echo(path)
+        echo(rel)
+
+
+@cli.command()
+@click.argument('src', type=SRC_PATH)
+@click.pass_obj
+def prune(opts, src):
+    encoding = opts['encoding']
+    dry_run = opts['dry_run']
 
 
 @cli.command()
 @click.argument('src', type=SRC_PATH)
 @click.argument('dst', type=DST_PATH)
-@click.option('--encoding', default='utf8')
-@click.option('--dry-run', is_flag=True, default=False)
-def mv(src, dst, encoding,dry_run):
+@click.pass_obj
+def mv(src, dst):
     """Move src org file to dst.
 
     'src' is always absolute path for an existing file, by click.
@@ -52,6 +54,9 @@ def mv(src, dst, encoding,dry_run):
           uses src's filename
           if 'dst' is a existing directory or endswith 'os.sep'
     """
+    encoding = opts['encoding']
+    dry_run = opts['dry_run']
+
     if os.path.isdir(dst) or dst.endswith(os.sep):
         _, src_name = os.path.split(src)
         dst = os.path.join(dst, src_name)
