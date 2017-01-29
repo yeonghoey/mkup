@@ -4,6 +4,8 @@ from __future__ import absolute_import, unicode_literals
 import os
 
 
+ORG_EXTENSIONS = ('.org', '.org_archive')
+
 IMAGE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif')
 
 

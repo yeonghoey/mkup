@@ -7,7 +7,7 @@ import click
 from click import echo, secho
 
 from orgtools.links import relfiles_in_file
-from orgtools.utils import ensure_path, IMAGE_EXTENSIONS
+from orgtools.utils import ensure_path, IMAGE_EXTENSIONS, ORG_EXTENSIONS
 
 
 click.disable_unicode_literals_warning = True
@@ -40,10 +40,12 @@ def relfiles(opts, src):
 @click.argument('basedir', type=DIR_PATH)
 @click.option('extensions', '--extension', '-e',
               multiple=True, default=list(IMAGE_EXTENSIONS))
+@click.option('org_extensions', '--org-extension', '-o',
+              multiple=True, default=list(ORG_EXTENSIONS))
+@click.option('--delete', is_flag=True, default=False)
 @click.pass_obj
-def prune(opts, basedir, extensions):
+def prune(opts, basedir, extensions, org_extensions, delete):
     encoding = opts['encoding']
-    dry_run = opts['dry_run']
 
     orgfiles, candidates = set(), set()
     for root, dirnames, filenames in os.walk(basedir):
@@ -51,7 +53,7 @@ def prune(opts, basedir, extensions):
             filepath = os.path.join(root, filename)
             if filepath.endswith(extensions):
                 candidates.add(filepath)
-            if filepath.endswith('.org'):
+            if filepath.endswith(org_extensions):
                 orgfiles.add(filepath)
 
     relfiles = set()
@@ -63,11 +65,11 @@ def prune(opts, basedir, extensions):
 
     targets = candidates - relfiles
     for target in targets:
-        if dry_run:
-            secho(target, fg='yellow')
-        else:
+        if delete:
             secho(target, fg='red')
             os.remove(target)
+        else:
+            echo(target)
 
 
 @cli.command()
