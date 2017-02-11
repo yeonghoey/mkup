@@ -76,7 +76,7 @@ def prune(opts, basedir, extensions, org_extensions, delete):
 @click.argument('src', type=SRC_PATH)
 @click.argument('dst', type=DST_PATH)
 @click.pass_obj
-def mv(src, dst):
+def mv(opts, src, dst):
     """Move src org file to dst.
 
     'src' is always absolute path for an existing file, by click.
