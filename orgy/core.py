@@ -27,28 +27,39 @@ def ensure_path(path):
             raise
 
 
-def rellink_paths(org_path, encoding):
+def relfilelink_paths(org_path, encoding):
     with codecs.open(org_path, 'r', encoding=encoding) as f:
         content = f.read()
 
     basedir, _ = os.path.split(org_path)
     links = extract_links(content)
-    relpaths = select_relpaths(links)
+    filelinks = select_filelinks(links)
 
-    for relpath in relpaths:
-        path = abspath(join(basedir, relpath))
+    for link in filelinks:
+        # Remove 'file:' if existing
+        path = re.sub(r'^file:', '', link)
+
+        # Pick only relative paths relative
+        if os.path.isabs(path):
+            continue
+
+        path = abspath(join(basedir, path))
         if os.path.exists(path):
             yield path
 
 
-def select_relpaths(links):
-    for link in extract_links(content):
-        # Match links of relpaths like:
-        # - 'file:img/*'
-        # - 'img/*'
-        m = re.match(r'^(?:file\:)?((?:[^/ ]+/?)+)$', link)
-        if m is not None:
-            yield m.group(1)
+def select_filelinks(links):
+    for link in links:
+        # Skip org internal link
+        if link.startswith('#'):
+            continue
+
+        # if scheme is specified, it should be 'file'
+        m = re.match(r'^(?P<scheme>[^:]+)\:.+$', link)
+        if m is not None and m['scheme'] != 'file':
+            continue
+
+        yield link
 
 
 def extract_links(content):
