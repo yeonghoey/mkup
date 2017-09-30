@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 import os
 
 import click
 from click import echo, secho
 
-from orgtools.links import relfiles_in_file
-from orgtools.utils import ensure_path, IMAGE_EXTENSIONS, ORG_EXTENSIONS
+from orgy.links import relfiles_in_file
+from orgy.utils import ensure_path, IMAGE_EXTENSIONS, ORG_EXTENSIONS
 
 
 click.disable_unicode_literals_warning = True
