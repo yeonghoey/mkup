@@ -1,27 +1,42 @@
-from click import argument, echo, option, pass_obj, Path, secho
+from click import argument, echo, option, Path, secho
 
 
-@argument('basedir', type=Path(exists=True,
-                                file_okay=False,
-                                dir_okay=True,
-                                resolve_path=True))
+@argument('basedir',
+          type=Path(exists=True,
+                    file_okay=False,
+                    dir_okay=True,
+                    resolve_path=True))
 
-@option('org_exts', '--org-ext', '-o',
-            multiple=True,
-            default=['.org', '.org_archive'])
+@option('org_extensions', '--org-extension', '-o',
+        multiple=True,
+        default=['.org', '.org_archive'])
 
-@option('rel_exts', '--rel-ext', '-r',
-            multiple=True,
-            default=['.png', '.jpg', '.jpeg', '.gif'])
+@option('rel_extensions', '--rel-extension', '-r',
+        multiple=True,
+        default=['.png', '.jpg', '.jpeg', '.gif'])
 
-@pass_obj
-def prune(opts, basedir, rel_exts, org_exts):
-    encoding = opts['encoding']
-    dry_run = opts['dry_run']
+@option('encodig', '--encoding',
+        default='utf8')
 
-    files = collect_files(basedir, {'org': org_exts, 'rel': rel_exts})
+@option('dry_run', '--dry-run',
+        is_flag=True,
+        default=False)
 
-    for orgfile in orgfiles:
+def prune(basedir,
+          org_extensions,
+          rel_extensions,
+          encoding,
+          dry_run):
+
+    files = collect_files(basedir, {
+        'org': org_extensions,
+        'rel': rel_extensions
+    })
+
+
+    
+    for org_path in files['org']:
+        existing_linked_paths(org_path):
         basedir, _ = os.path.split(orgfile)
         for relfile in relfiles_in_file(orgfile, encoding):
             filepath = os.path.join(basedir, relfile)

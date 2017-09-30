@@ -1,15 +1,13 @@
 import codecs
 import os
+from os.path import abspath, join
 import re
-
-
-RELPATH = re.compile(r'^(?:[^/ ]+/?)+$')
 
 
 def collect_files(basedir, exts):
     for root, _, filenames in os.walk(basedir):
         for fn in filenames:
-            p = os.path.join(root, fn)
+            p = join(root, fn)
             if p.endswith(org_extensions):
                 orgfiles.add(p)
             if p.endswith(rel_extensions):
@@ -29,25 +27,30 @@ def ensure_path(path):
             raise
 
 
-def extract_links(content):
-    # '[[link][description]]' or '[[link]]'
-    return re.findall(r'\[\[([^\]]+)\](?:\[[^\]]+\])?\]', content)
-
-
-def relfiles(links, basedir):
-    for path in links:
-        link = link[5:] if link.startswith('file:') else link
-        m = RELPATH.match(link)
-        if m is not None:
-            rel = m.group(0)
-            path = os.path.join(basedir, m.group(0))
-            path = os.path.abspath(path)
-            if os.path.exists(path):
-                yield rel
-
-
-def relfiles_in_file(path, encoding='utf8'):
-    with codecs.open(path, 'r', encoding=encoding) as f:
+def rellink_paths(org_path, encoding):
+    with codecs.open(org_path, 'r', encoding=encoding) as f:
         content = f.read()
-    basedir, _ = os.path.split(path)
-    return relfiles(content, basedir)
+
+    basedir, _ = os.path.split(org_path)
+    links = extract_links(content)
+    relpaths = select_relpaths(links)
+
+    for relpath in relpaths:
+        path = abspath(join(basedir, relpath))
+        if os.path.exists(path):
+            yield path
+
+
+def select_relpaths(links):
+    for link in extract_links(content):
+        # Match links of relpaths like:
+        # - 'file:img/*'
+        # - 'img/*'
+        m = re.match(r'^(?:file\:)?((?:[^/ ]+/?)+)$', link)
+        if m is not None:
+            yield m.group(1)
+
+
+def extract_links(content):
+    # '[[link][description]]' or '[[link]]' -> 'link'
+    return re.findall(r'\[\[([^\]]+)\](?:\[[^\]]+\])?\]', content)
