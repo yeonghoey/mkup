@@ -1,4 +1,9 @@
-from click import argument, echo, option, Path, secho
+from itertools import chain
+import os
+
+from click import argument, confirm, echo, option, Path, secho
+
+from orgy.core import collect_files, relfilelink_paths
 
 
 @argument('basedir',
@@ -15,10 +20,10 @@ from click import argument, echo, option, Path, secho
         multiple=True,
         default=['.png', '.jpg', '.jpeg', '.gif'])
 
-@option('encodig', '--encoding',
+@option('encoding', '--encoding',
         default='utf8')
 
-@option('dry_run', '--dry-run',
+@option('yes', '--yes', '-y',
         is_flag=True,
         default=False)
 
@@ -26,18 +31,22 @@ def prune(basedir,
           org_extensions,
           rel_extensions,
           encoding,
-          dry_run):
+          yes):
 
     files = collect_files(basedir, {
         'org': org_extensions,
         'rel': rel_extensions
     })
 
-    existing = sum(relfilelink_paths(p) for p in files['org'])
+    paths = [relfilelink_paths(p, encoding) for p in files['org']]
+    existing = set(chain.from_iterable(paths))
     targets = files['rel'] - existing
-    for target in targets:
-        echo(target)
-        # if delete:
-        #     secho(target, fg='red')
-        #     os.remove(target)
-        # else:
+
+    for t in targets:
+        secho(t, fg='red')
+
+    if targets:
+        delete = yes or confirm('Delete?')
+        if delete:
+            for t in targets:
+                os.remove(t)
