@@ -3,7 +3,7 @@ import os
 
 from click import argument, confirm, echo, option, Path, secho
 
-from orgy.core import collect_files, relfilelink_paths
+from orgy.core import collect_files, relfiles
 
 @argument('directory',
           type=Path(exists=True,
@@ -37,7 +37,7 @@ def prune(directory,
         'rel': rel_extensions
     })
 
-    paths = [relfilelink_paths(p, encoding) for p in files['org']]
+    paths = [relfiles(p, encoding) for p in files['org']]
     existing = set(chain.from_iterable(paths))
     targets = files['rel'] - existing
 

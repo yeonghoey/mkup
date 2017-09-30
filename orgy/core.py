@@ -36,7 +36,7 @@ def collect_files(directory, extensions):
     return files
 
 
-def relfilelink_paths(orgfile_path, encoding):
+def relfiles(orgfile_path, encoding):
     with codecs.open(orgfile_path, 'r', encoding=encoding) as f:
         content = f.read()
 
