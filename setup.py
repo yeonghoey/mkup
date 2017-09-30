@@ -1,16 +1,18 @@
+import ast
+import re
 from setuptools import setup
 
 
 
-def extract_version(init_content):
+def extract_version(content):
     m = re.search(r'__version__\s+=\s+(.*)', content)
     s = m.group(1)
     return str(ast.literal_eval(s))
 
 
 with open('orgy/__init__.py', 'rb') as f:
-    init_content = f.read().decode('utf-8')
-    version = extract_version(init_content)
+    content = f.read().decode('utf-8')
+    version = extract_version(content)
 
 
 setup(
@@ -25,7 +27,6 @@ setup(
 
     classifiers=[
         'Development Status :: 1 - Planning',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
