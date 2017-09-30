@@ -1,23 +1,23 @@
 import codecs
 from collections import defaultdict
 import os
-from os.path import abspath, join, splitext
+from os.path import abspath, dirname, join, splitext
 import re
 
 
 def ensure_path(path):
     if path.endswith(os.sep):
-        basedir = path
+        directory = path
     else:
-        basedir, _ = os.path.split(path)
+        directory = dirname(path)
     try:
-        os.makedirs(basedir)
+        os.makedirs(directory)
     except OSError:
-        if not os.path.isdir(basedir):
+        if not os.path.isdir(directory):
             raise
 
 
-def collect_files(basedir, extensions):
+def collect_files(directory, extensions):
     # Build inverse lookup dict
     ext_kinds = defaultdict(set)
     for kind, exts in extensions.items():
@@ -25,7 +25,7 @@ def collect_files(basedir, extensions):
             ext_kinds[ext].add(kind)
 
     files = defaultdict(set)
-    for root, _, filenames in os.walk(basedir):
+    for root, _, filenames in os.walk(directory):
         for fn in filenames:
             _, ext = splitext(fn)
             kinds = ext_kinds.get(ext, [])
@@ -36,14 +36,14 @@ def collect_files(basedir, extensions):
     return files
 
 
-def relfilelink_paths(org_path, encoding):
-    with codecs.open(org_path, 'r', encoding=encoding) as f:
+def relfilelink_paths(orgfile_path, encoding):
+    with codecs.open(orgfile_path, 'r', encoding=encoding) as f:
         content = f.read()
 
-    basedir, _ = os.path.split(org_path)
     links = extract_links(content)
     filelinks = select_filelinks(links)
 
+    orgfile_dir = dirname(orgfile_path)
     for link in filelinks:
         # Remove 'file:' if existing
         path = re.sub(r'^file:', '', link)
@@ -52,7 +52,7 @@ def relfilelink_paths(org_path, encoding):
         if os.path.isabs(path):
             continue
 
-        path = abspath(join(basedir, path))
+        path = abspath(join(orgfile_dir, path))
         if os.path.exists(path):
             yield path
 

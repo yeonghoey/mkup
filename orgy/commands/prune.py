@@ -5,8 +5,7 @@ from click import argument, confirm, echo, option, Path, secho
 
 from orgy.core import collect_files, relfilelink_paths
 
-
-@argument('basedir',
+@argument('directory',
           type=Path(exists=True,
                     file_okay=False,
                     dir_okay=True,
@@ -27,13 +26,13 @@ from orgy.core import collect_files, relfilelink_paths
         is_flag=True,
         default=False)
 
-def prune(basedir,
+def prune(directory,
           org_extensions,
           rel_extensions,
           encoding,
           yes):
 
-    files = collect_files(basedir, {
+    files = collect_files(directory, {
         'org': org_extensions,
         'rel': rel_extensions
     })
