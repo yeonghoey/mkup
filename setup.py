@@ -1,27 +1,39 @@
-"""
-orgtools streamlines managing org documents
-"""
-from setuptools import setup, find_packages
+from setuptools import setup
+
+
+
+def extract_version(init_content):
+    m = re.search(r'__version__\s+=\s+(.*)', content)
+    s = m.group(1)
+    return str(ast.literal_eval(s))
+
+
+with open('orgy/__init__.py', 'rb') as f:
+    init_content = f.read().decode('utf-8')
+    version = extract_version(init_content)
 
 
 setup(
-    name='orgtools',
-    version='0.0.1',
-    description=__doc__,
+    name='orgy',
+    version=version,
+    description='Orgy streamlines managing Emacs org-mode documents',
+
     author='Yeongho Kim',
     author_email='yeonghoey@gmail.com',
-    license='MIT',
+
+    packages=['orgy'],
+
     classifiers=[
         'Development Status :: 1 - Planning',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
-    keywords='productivity',
-    packages=find_packages(exclude=['tests']),
+
     entry_points={
         'console_scripts': [
-            'org=orgtools.__main__:cli',
+            'orgy=orgy.__main__:cli',
         ]
     },
 )
