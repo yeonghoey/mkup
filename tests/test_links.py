@@ -1,16 +1,17 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 import os
 
-from orgtools.links import extract, relfiles
+from orgy.links import extract, relfiles
 
 
 SAMPLES = [
     '',
+
     '[[file.txt]]',
+
     '[[image.png][description]]',
+
     '[[http://example.com][example]] [[image.png]]',
+
     '''* Test
     - [[path/to/image.jpg]]
     - [[file:path/to/image.jpeg]]

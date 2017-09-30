@@ -25,15 +25,20 @@ setup(
 
     packages=['orgy'],
 
+    entry_points={
+        'console_scripts': [
+            'orgy=orgy.__main__:cli',
+        ]
+    },
+
+    install_requires=[
+        'click>=6.7'
+    ],
+
     classifiers=[
         'License :: OSI Approved :: MIT License',
 
         'Programming Language :: Python :: 3.6',
     ],
 
-    entry_points={
-        'console_scripts': [
-            'orgy=orgy.__main__:cli',
-        ]
-    },
 )
