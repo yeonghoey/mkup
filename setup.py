@@ -26,10 +26,9 @@ setup(
     packages=['orgy'],
 
     classifiers=[
-        'Development Status :: 1 - Planning',
-        'Programming Language :: Python :: 3.6',
         'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
+
+        'Programming Language :: Python :: 3.6',
     ],
 
     entry_points={
