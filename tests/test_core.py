@@ -1,6 +1,6 @@
 import os
 
-from orgy.core import extract_links, select_filelinks
+from orgy.core import collect_files, extract_links, select_filelinks
 
 
 SAMPLES = [
@@ -32,26 +32,36 @@ def assert_samples(f, expectations):
         assert list(f(s)) == e
 
 
-def test_extract_links():
-    assert_samples(extract_links, [
-        [],
+def test_ensure_path():
+    pass
 
-        ['file.txt'],
 
-        ['image.png'],
+def test_collect_files(tmpdir):
+    basedir = tmpdir.mkdir('yeonghoey')
 
-        ['file:image.png'],
+    basedir.join('foo.org').write('')
+    basedir.join('bar.png').write('')
+    basedir.join('baz.jpg').write('')
+    basedir.join('qux.txt').write('')
+    basedir.join('xxx.yyy').write('')
 
-        ['http://example.com', 'image.png'],
+    files = collect_files(basedir, {
+        'org': ['.org'],
+        'img': ['.png', '.jpg'],
+        'xxx': ['.org', '.txt'],
+    })
 
-        ['path/to/image.jpg',
-         'file:path/to/image.jpeg',
-         'http://example.com',
-         '/more/image.gif',
-         'irc:/irc.com',
-         'file:/more/image.gif',
-         '#internal'],
-    ])
+    assert files == {
+        'org': set([basedir.join('foo.org')]),
+        'img': set([basedir.join('bar.png'),
+                    basedir.join('baz.jpg')]),
+        'xxx': set([basedir.join('foo.org'),
+                    basedir.join('qux.txt')]),
+    }
+
+
+def test_refilelink_paths():
+    pass
 
 
 def test_select_filelinks():
@@ -78,5 +88,23 @@ def test_select_filelinks():
     ])
 
 
-def test_refilelink_paths():
-    pass
+def test_extract_links():
+    assert_samples(extract_links, [
+        [],
+
+        ['file.txt'],
+
+        ['image.png'],
+
+        ['file:image.png'],
+
+        ['http://example.com', 'image.png'],
+
+        ['path/to/image.jpg',
+         'file:path/to/image.jpeg',
+         'http://example.com',
+         '/more/image.gif',
+         'irc:/irc.com',
+         'file:/more/image.gif',
+         '#internal'],
+    ])

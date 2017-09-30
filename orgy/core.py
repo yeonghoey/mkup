@@ -1,18 +1,8 @@
 import codecs
+from collections import defaultdict
 import os
-from os.path import abspath, join
+from os.path import abspath, join, splitext
 import re
-
-
-def collect_files(basedir, exts):
-    for root, _, filenames in os.walk(basedir):
-        for fn in filenames:
-            p = join(root, fn)
-            if p.endswith(org_extensions):
-                orgfiles.add(p)
-            if p.endswith(rel_extensions):
-                relfiles.add(p)
-    return orgfiles, relfiles
 
 
 def ensure_path(path):
@@ -25,6 +15,25 @@ def ensure_path(path):
     except OSError:
         if not os.path.isdir(basedir):
             raise
+
+
+def collect_files(basedir, extensions):
+    # Build inverse lookup dict
+    ext_kinds = defaultdict(set)
+    for kind, exts in extensions.items():
+        for ext in exts:
+            ext_kinds[ext].add(kind)
+
+    files = defaultdict(set)
+    for root, _, filenames in os.walk(basedir):
+        for fn in filenames:
+            _, ext = splitext(fn)
+            kinds = ext_kinds.get(ext, [])
+            for k in kinds:
+                abspath = join(root, fn)
+                files[k].add(abspath)
+
+    return files
 
 
 def relfilelink_paths(org_path, encoding):
