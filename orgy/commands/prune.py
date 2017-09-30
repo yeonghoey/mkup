@@ -33,19 +33,11 @@ def prune(basedir,
         'rel': rel_extensions
     })
 
-
-    
-    for org_path in files['org']:
-        existing_linked_paths(org_path):
-        basedir, _ = os.path.split(orgfile)
-        for relfile in relfiles_in_file(orgfile, encoding):
-            filepath = os.path.join(basedir, relfile)
-            relfiles.add(filepath)
-
-    targets = candidates - relfiles
+    existing = sum(relfilelink_paths(p) for p in files['org'])
+    targets = files['rel'] - existing
     for target in targets:
-        if delete:
-            secho(target, fg='red')
-            os.remove(target)
-        else:
-            echo(target)
+        echo(target)
+        # if delete:
+        #     secho(target, fg='red')
+        #     os.remove(target)
+        # else:
