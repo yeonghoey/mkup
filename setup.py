@@ -18,7 +18,7 @@ with open('mkup/__init__.py', 'rb') as f:
 setup(
     name='mkup',
     version=version,
-    description='CLI for Markup files',
+    description='CLI for Markups',
     keywords='cli markup markdown org',
     url='https://github.com/yeonghoey/mkup',
 
