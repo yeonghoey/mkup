@@ -3,7 +3,7 @@ import os
 
 from click import argument, confirm, echo, option, Path, secho
 
-from maup.core import collect_files, relfiles
+from mkup.core import collect_files, relfiles
 
 @argument('directory',
           type=Path(exists=True,

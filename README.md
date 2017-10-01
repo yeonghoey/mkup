@@ -1,1 +1,1 @@
-# maup: CLI for Markup files
+# mkup: CLI for Markup files

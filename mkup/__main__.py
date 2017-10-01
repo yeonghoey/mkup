@@ -1,7 +1,7 @@
 import click
 
-from maup.commands.mv import mv
-from maup.commands.prune import prune
+from mkup.commands.mv import mv
+from mkup.commands.prune import prune
 
 
 @click.group()

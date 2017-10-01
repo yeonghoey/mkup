@@ -10,17 +10,17 @@ def extract_version(content):
     return str(ast.literal_eval(s))
 
 
-with open('maup/__init__.py', 'rb') as f:
+with open('mkup/__init__.py', 'rb') as f:
     content = f.read().decode('utf-8')
     version = extract_version(content)
 
 
 setup(
-    name='maup',
+    name='mkup',
     version=version,
     description='CLI for Markup files',
     keywords='cli markup markdown org',
-    url='https://github.com/yeonghoey/maup',
+    url='https://github.com/yeonghoey/mkup',
 
     author='Yeongho Kim',
     author_email='yeonghoey@gmail.com',
@@ -29,7 +29,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'maup=maup.__main__:cli',
+            'mkup=mkup.__main__:cli',
         ]
     },
 
