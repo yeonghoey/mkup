@@ -10,24 +10,24 @@ def extract_version(content):
     return str(ast.literal_eval(s))
 
 
-with open('orgy/__init__.py', 'rb') as f:
+with open('maup/__init__.py', 'rb') as f:
     content = f.read().decode('utf-8')
     version = extract_version(content)
 
 
 setup(
-    name='orgy',
+    name='maup',
     version=version,
-    description='Orgy streamlines managing Emacs org-mode documents',
+    description='CLI for MArkUP files',
 
     author='Yeongho Kim',
     author_email='yeonghoey@gmail.com',
 
-    packages=['orgy'],
+    packages=['maup'],
 
     entry_points={
         'console_scripts': [
-            'orgy=orgy.__main__:cli',
+            'maup=maup.__main__:cli',
         ]
     },
 

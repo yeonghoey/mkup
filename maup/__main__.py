@@ -1,7 +1,7 @@
 import click
 
-from orgy.commands.mv import mv
-from orgy.commands.prune import prune
+from maup.commands.mv import mv
+from maup.commands.prune import prune
 
 
 @click.group()

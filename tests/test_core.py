@@ -1,6 +1,6 @@
 import os
 
-from orgy.core import collect_files, extract_links, select_filelinks
+from maup.core import collect_files, extract_links, select_filelinks
 
 
 SAMPLES = [

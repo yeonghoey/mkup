@@ -4,7 +4,7 @@ from os.path import abspath, basename, dirname, join, relpath
 
 from click import argument, confirm, echo, option, pass_obj, Path, secho
 
-from orgy.core import ensure_path, relfiles
+from maup.core import ensure_path, relfiles
 
 
 @argument('src',
