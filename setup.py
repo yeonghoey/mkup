@@ -1,6 +1,6 @@
 import ast
 import re
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
 
@@ -19,16 +19,13 @@ setup(
     name='maup',
     version=version,
     description='CLI for Markup files',
-    keywords=['markup', 'cli'],
-
+    keywords='cli markup markdown org',
     url='https://github.com/yeonghoey/maup',
-    download_url=\
-      'https://github.com/yeonghoey/maup/archive/%s.tar.gz' % version,
 
     author='Yeongho Kim',
     author_email='yeonghoey@gmail.com',
 
-    packages=['maup'],
+    packages=find_packages(),
 
     entry_points={
         'console_scripts': [
@@ -42,8 +39,6 @@ setup(
 
     classifiers=[
         'License :: OSI Approved :: MIT License',
-
         'Programming Language :: Python :: 3.6',
     ],
-
 )
