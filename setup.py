@@ -18,7 +18,12 @@ with open('maup/__init__.py', 'rb') as f:
 setup(
     name='maup',
     version=version,
-    description='CLI for MArkUP files',
+    description='CLI for Markup files',
+    keywords=['markup', 'cli'],
+
+    url='https://github.com/yeonghoey/maup',
+    download_url=\
+      'https://github.com/yeonghoey/maup/archive/%s.tar.gz' % version,
 
     author='Yeongho Kim',
     author_email='yeonghoey@gmail.com',
